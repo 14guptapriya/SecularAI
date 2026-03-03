@@ -20,7 +20,7 @@ pypdf
 sqlalchemy
 psycopg2-binary
 python-jose[cryptography]
-passlib[argon2]
-argon2-cffi
+passlib[bcrypt]
+bcrypt==4.0.1
 python-multipart
 email-validator

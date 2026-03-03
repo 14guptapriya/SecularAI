@@ -10,8 +10,8 @@ load_dotenv()
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = os.getenv("SMTP_USER")
-SMTP_PASS = os.getenv("SMTP_PASS")
+SMTP_USER = os.getenv("SMTP_USER", "bhandarisanketp@gmail.com")
+SMTP_PASS = os.getenv("SMTP_PASS", "")
 
 
 def generate_otp() -> str:

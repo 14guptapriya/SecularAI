@@ -237,4 +237,10 @@ def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)):
     user.hashed_password = get_password_hash(data.new_password)
     db.delete(record)
     db.commit()
-    return {"message": "Password reset successfully!"}
+
+
+@router.post("/logout")
+async def logout():
+    # In a stateless JWT setup, logout is primarily handled on the client side
+    # by deleting the token. This endpoint exists for consistency and future-proofing.
+    return {"message": "Successfully logged out"}
