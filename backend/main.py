@@ -21,7 +21,8 @@ allowed_origins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "https://gitarag.vercel.app",
-    "https://secularai.vercel.app",
+    "https://secular-ai.vercel.app",
+    frontend_url,
     
 ]
 if frontend_url:
