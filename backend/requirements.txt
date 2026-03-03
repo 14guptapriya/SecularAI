@@ -3,16 +3,20 @@ uvicorn
 gunicorn
 python-dotenv
 
-# RAG / LLM
-langchain>=0.2.8,<0.3.0
-langchain-community>=0.2.8,<0.3.0
-langchain-pinecone>=0.2.8,<0.3.0
-langchain_mistralai>=0.2.8,<0.3.0
+# LangChain stack (safe for Python 3.11)
+langchain
+langchain-community
+langchain-pinecone
+langchain-mistralai
+
+# Vector DB
+pinecone-client
+
+# LLM
 groq
-pypdf
 google-genai
 langchain-google-genai
-pinecone
+pypdf
 
 # Auth & DB
 sqlalchemy
