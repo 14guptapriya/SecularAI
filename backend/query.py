@@ -1,57 +1,73 @@
 from langchain_mistralai import MistralAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
-from langchain_community.chat_message_histories import ChatMessageHistory
 from dotenv import load_dotenv
 from groq import Groq
 import os
-import re
 
 load_dotenv()
 
-# Pinecone init — wrapped so the server still starts even if key is invalid
+# ------------------------
+# Pinecone + Embeddings
+# ------------------------
 pc = None
-index = None
-vector_store = None
+embeddings = None
 
 try:
     pc = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
-    index = pc.Index("gita")
     embeddings = MistralAIEmbeddings(model="mistral-embed")
-    vector_store = PineconeVectorStore(index=index, embedding=embeddings)
     print("[OK] Pinecone + Mistral embeddings connected.")
 except Exception as e:
     print(f"[WARNING] Pinecone init failed: {e}")
-    print("[WARNING] /query endpoint will not work until this is fixed.")
-    embeddings = None
 
+# ------------------------
+# Vector store selector
+# ------------------------
+def get_vector_store_for_scripture(scripture: str):
+    if not pc or not embeddings:
+        raise RuntimeError("Vector store not initialized")
+
+    scripture = scripture.lower()
+
+    index_map = {
+        "bhagavad gita": "bhagavad-gita",
+        "gita": "bhagavad-gita",
+        "quran": "quran-english",
+    }
+
+    index_name = index_map.get(scripture)
+    if not index_name:
+        raise ValueError(f"No index configured for scripture: {scripture}")
+
+    index = pc.Index(index_name)
+    return PineconeVectorStore(index=index, embedding=embeddings)
+
+# ------------------------
+# LLM
+# ------------------------
 chat = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-chat_history = ChatMessageHistory()
 
-
+# ------------------------
+# Safety filter
+# ------------------------
 def is_harmful_query(q: str):
     bad = [
-        "kill",
-        "murder",
-        "hurt someone",
-        "attack",
-        "self harm",
-        "suicide",
-        "end my life",
-        "rape",
-        "abuse",
-        "violent",
-        "bomb",
-        "terror",
+        "kill", "murder", "attack", "self harm", "suicide",
+        "end my life", "rape", "abuse", "bomb", "terror"
     ]
     q = q.lower()
     return any(b in q for b in bad)
 
+# ------------------------
+# Search
+# ------------------------
+def similarity_search(query: str, scripture: str, k: int = 3):
+    vs = get_vector_store_for_scripture(scripture)
+    return vs.similarity_search(query, k=k)
 
-def similarity_search(query: str, k: int = 3):
-    return vector_store.similarity_search(query, k=k)
-
-
+# ------------------------
+# Main RAG function
+# ------------------------
 def get_ai_reply(
     query: str,
     history_text: str = "",
@@ -59,29 +75,31 @@ def get_ai_reply(
     scripture: str = "Bhagavad Gita",
 ):
     if is_harmful_query(query):
-        return "I cannot guide you toward harm. But I can help you calm your mind. Tell me what you are feeling."
+        return "I cannot guide you toward harm. But I can help you calm your mind."
 
-    context_docs = similarity_search(query, k=3)
-    context = "\n\n".join([d.page_content for d in context_docs])
+    docs = similarity_search(query, scripture, k=3)
+    context = "\n\n".join(d.page_content for d in docs)
 
     system_prompt = f"""
-You are a wise and compassionate guide representing the teachings of {scripture} from the {religion} tradition, speaking in simple modern English.
+You are a spiritual guide who can ONLY answer using the Context provided
+from {scripture} ({religion}).
 
-Rules:
-1. Match the user’s tone.
-2. Use wisdom from the {scripture} only when natural.
-3. If using a verse or quote:
-   - Write it in this exact format:
-     [VERSE title="<Reference>"]
-     <actual verse text here>
-     [/VERSE]
-   - Example: [VERSE title="{scripture} Chapter 2, Verse 47"] You have a right to perform your prescribed duty... [/VERSE]
-4. After the tile, continue your explanation normally.
-5. Do NOT invent verses. Only use verses you know from {scripture}.
-6. English should be very simple and easy to understand.
-7. Respond in the user's language.
-8. Avoid medical/legal/harmful advice.
+STRICT RULES (MUST FOLLOW EXACTLY):
+1. Use ONLY the Context text.
+2. FIRST output the verses.
+3. AFTER verses, write a short explanation.
+4. Verses MUST be written ONLY inside the tags below and NEVER repeated elsewhere:
 
+[VERSE title="<Chapter, Verse>"]
+<exact verse text>
+[/VERSE]
+
+5. DO NOT repeat verse text in the explanation.
+6. DO NOT paraphrase, summarize, or re-quote verses.
+7. Explanation must be your own words, based on the verses.
+8. If Context is insufficient, say exactly:
+   "I could not find a relevant verse for this question."
+9. Use very simple English.
 """
 
     user_prompt = f"""
@@ -92,10 +110,7 @@ Conversation:
 {history_text}
 
 User: {query}
-
-Respond now following all rules.
 """
-
     response = chat.chat.completions.create(
         model="llama-3.3-70b-versatile",
         temperature=0.6,
@@ -107,5 +122,4 @@ Respond now following all rules.
         ],
     )
 
-    reply = response.choices[0].message.content
-    return reply
+    return response.choices[0].message.content

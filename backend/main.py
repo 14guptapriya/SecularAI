@@ -15,6 +15,8 @@ import os
 
 frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 allowed_origins = [
+    "http://localhost:8080",  # frontend
+    "http://127.0.0.1:8080",
     "http://localhost:3000",
     "http://localhost:5173",
     "http://localhost:5174",
@@ -37,6 +39,13 @@ from chat_router import router as chat_router
 app.include_router(auth_router)
 app.include_router(chat_router)
 
+@app.get("/")
+def read_root():
+    return {"message": "SecularAI API is running", "status": "ok"}
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return {"ok": True}
 
 class QueryRequest(BaseModel):
     user_query: str

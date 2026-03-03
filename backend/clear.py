@@ -9,7 +9,8 @@ print("Loaded API key:", api_key)
 
 pc = Pinecone(api_key=api_key)
 
-index_name = "gita"
+# use same index name as ingestion/query
+index_name = os.environ.get("PINECONE_INDEX", "bhagavad-gita")
 index = pc.Index(index_name)
 
 index.delete(delete_all=True)
