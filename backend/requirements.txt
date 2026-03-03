@@ -8,9 +8,18 @@ langchain>=0.3.7
 langchain-community>=0.3.7
 langchain-core>=0.3.45
 langchain-mistralai>=0.2.8
+google-genai
+langchain-google-genai
 
 # Vector DB & LLM
 pinecone
 groq
 pypdf
+
+# Auth & DB
+sqlalchemy
+psycopg2-binary
+python-jose[cryptography]
 passlib[bcrypt]
+python-multipart
+email-validator
