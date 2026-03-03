@@ -6,7 +6,8 @@ python-dotenv
 langchain==0.2.16
 langchain-community==0.2.16
 langchain-core==0.2.36
-langchain-mistralai==0.2.16
+
+langchain-mistralai>=0.2.8,<0.3.0
 pinecone
 groq
 pypdf
