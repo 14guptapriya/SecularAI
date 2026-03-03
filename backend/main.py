@@ -13,7 +13,7 @@ app = FastAPI(title="SecularAI API")
 
 import os
 
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+frontend_url = os.getenv("FRONTEND_URL")
 allowed_origins = [
     "http://localhost:8080",  # frontend
     "http://127.0.0.1:8080",
@@ -21,8 +21,11 @@ allowed_origins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "https://gitarag.vercel.app",
-    frontend_url,
+    "https://secularai.vercel.app",
+    
 ]
+if frontend_url:
+    allowed_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
