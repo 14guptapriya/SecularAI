@@ -3,11 +3,11 @@ uvicorn
 gunicorn
 python-dotenv
 
-# LangChain (aligned versions)
-langchain==0.2.16
-langchain-community==0.2.16
-langchain-core>=0.2.38,<0.3.0
-langchain-mistralai>=0.2.8,<0.3.0
+# LangChain 0.3 ecosystem (COMPATIBLE)
+langchain>=0.3.7
+langchain-community>=0.3.7
+langchain-core>=0.3.45
+langchain-mistralai>=0.2.8
 
 # Vector DB & LLM
 pinecone
