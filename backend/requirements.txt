@@ -13,3 +13,4 @@ langchain-mistralai>=0.2.8
 pinecone
 groq
 pypdf
+passlib[bcrypt]
