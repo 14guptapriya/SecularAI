@@ -1,27 +1,29 @@
-fastapi
-uvicorn
-gunicorn
-python-dotenv
+# ---------- Server ----------
+fastapi==0.110.0
+uvicorn==0.27.1
+gunicorn==21.2.0
+python-dotenv==1.0.1
 
-# LangChain stack (safe for Python 3.11)
-langchain
-langchain-community
-langchain-pinecone
-langchain-mistralai
+# ---------- LangChain (PINNED) ----------
+langchain==0.2.14
+langchain-community==0.2.12
+langchain-core==0.2.36
+langchain-pinecone==0.2.8
+langchain-mistralai==0.2.4
 
-# Vector DB
-pinecone-client
+# ---------- Vector DB ----------
+pinecone-client==3.2.2
 
-# LLM
-groq
-google-genai
-langchain-google-genai
-pypdf
+# ---------- LLM ----------
+groq==0.9.0
+google-generativeai==0.7.2
+langchain-google-genai==1.0.8
+pypdf==4.2.0
 
-# Auth & DB
-sqlalchemy
-psycopg2-binary
-python-jose[cryptography]
-passlib[bcrypt]
-python-multipart
-email-validator
+# ---------- Auth / DB ----------
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.9
+email-validator==2.1.1
