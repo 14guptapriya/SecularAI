@@ -5,13 +5,14 @@ from pydantic import BaseModel
 from typing import Optional
 from database import engine, get_db
 import models
-
-# Create all tables on startup
-models.Base.metadata.create_all(bind=engine)
+import os
 
 app = FastAPI(title="SecularAI API")
+# Create all tables on startup
+@app.on_event("startup")
+def startup():
+    models.Base.metadata.create_all(bind=engine)
 
-import os
 
 frontend_url = os.getenv("FRONTEND_URL")
 allowed_origins = [
