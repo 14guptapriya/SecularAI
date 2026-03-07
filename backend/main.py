@@ -23,6 +23,7 @@ allowed_origins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "https://gitarag.vercel.app",
+    "https://secular-ai-backend.vercel.app",
     "https://secular-ai.vercel.app",
     frontend_url,
     
