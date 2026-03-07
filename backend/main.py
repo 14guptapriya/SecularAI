@@ -58,6 +58,13 @@ class QueryRequest(BaseModel):
     scripture: str = "gita"
     session_id: str
 
+@app.get("/db-test")
+def db_test(db: Session = Depends(get_db)):
+    try:
+        db.execute("SELECT 1")
+        return {"database": "connected"}
+    except Exception as e:
+        return {"database": "failed", "error": str(e)}
 
 @app.post("/query")
 def query_scripture(request: QueryRequest, db: Session = Depends(get_db)):
