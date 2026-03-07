@@ -1,3 +1,6 @@
+from email.mime import text
+
+from sqlalchemy import text
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -7,12 +10,10 @@ from database import engine, get_db
 import models
 import os
 
-app = FastAPI(title="SecularAI API")
-# Create all tables on startup
-@app.on_event("startup")
-def startup():
-    models.Base.metadata.create_all(bind=engine)
 
+# Create all tables on startup
+models.Base.metadata.create_all(bind=engine)
+app = FastAPI(title="SecularAI API")
 
 frontend_url = os.getenv("FRONTEND_URL")
 allowed_origins = [
@@ -61,7 +62,7 @@ class QueryRequest(BaseModel):
 @app.get("/db-test")
 def db_test(db: Session = Depends(get_db)):
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         return {"database": "connected"}
     except Exception as e:
         return {"database": "failed", "error": str(e)}
