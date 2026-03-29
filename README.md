@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔮 GitARAG
+# 🔮 SecularAi
 
 ### 🪷 *Ancient wisdom, modern tech. Chat with the Bhagavad Gita.*
 
