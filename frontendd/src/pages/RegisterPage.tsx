@@ -108,8 +108,9 @@ const RegisterPage = () => {
             </div>
             <button
                 onClick={() => navigate("/")}
-                aria-label="Close"
-                className="absolute left-0 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 h-24 w-4 rounded-r-full bg-amber-400/20 hover:bg-amber-400/35 transition-colors shadow-lg shadow-amber-500/10"
+                aria-label="Close sidebar"
+                title="Close sidebar"
+                className="absolute inset-y-0 left-0 z-20 w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] after:rounded-full after:bg-amber-300/30 hover:after:bg-amber-300/80 bg-transparent"
             />
             <div className="absolute top-4 right-4 z-10">
                 <ThemeToggle />
