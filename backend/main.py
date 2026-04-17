@@ -18,11 +18,10 @@ app = FastAPI(title="SecularAI API")
 frontend_url = os.getenv("FRONTEND_URL")
 allowed_origins = [
     "http://localhost:8080",  # frontend
-    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8080",  # Backend
     "http://localhost:3000",
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://gitarag.vercel.app",
     "https://secular-ai-backend.vercel.app",
     "https://secular-ai.vercel.app",
     frontend_url,
