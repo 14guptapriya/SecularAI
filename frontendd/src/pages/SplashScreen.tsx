@@ -262,7 +262,7 @@ export default function SplashScreen() {
       <div className="ambient-floor"></div>
 
       {/* Decorative Stars */}
-      <div className="star-deco s1">
+      {/* <div className="star-deco s1">
         <svg className="star-svg" viewBox="0 0 24 24" fill="#f5c842">
           <polygon points="12,2 15.09,10.26 24,10.26 17.55,15.74 19.64,24 12,18.52 4.36,24 6.45,15.74 0,10.26 8.91,10.26"/>
         </svg>
@@ -291,7 +291,7 @@ export default function SplashScreen() {
         <svg className="star-svg" viewBox="0 0 24 24" fill="#ffe08a">
           <polygon points="12,2 15.09,10.26 24,10.26 17.55,15.74 19.64,24 12,18.52 4.36,24 6.45,15.74 0,10.26 8.91,10.26"/>
         </svg>
-      </div>
+      </div> */}
 
       <main className="relative z-1 flex flex-col items-center justify-center min-h-screen p-[2rem_1.5rem_3rem]">
         <div className="orbit-scene">

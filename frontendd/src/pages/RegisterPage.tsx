@@ -99,7 +99,7 @@ const RegisterPage = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(129,140,248,0.06),_transparent_20%)]" />
             <div className="absolute top-4 left-4 z-10">
                 <button
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/home")}
                     className="p-2 rounded-2xl bg-slate-900/70 text-slate-100 hover:bg-slate-800 transition"
                     aria-label="Go back"
                 >

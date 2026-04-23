@@ -33,26 +33,33 @@ const HomePage = () => {
     <div className="min-h-screen bg-[#0a0515] flex">
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 bottom-0 w-64 bg-[#1a1428] border-r border-amber-500/20 transition-transform duration-300 z-50 md:relative md:translate-x-0 ${
+        className={`fixed left-0 top-0 bottom-0 w-64 bg-[#1a1428] border-r border-amber-500/20 transition-transform duration-300 z-50 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col p-4">
-          {/* Logo */}
-          <button
-            onClick={() => navigate("/home")}
-            className="mb-6 hover:opacity-80 transition-opacity flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-300/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
-              <Logo size={32} />
-            </div>
-            <div className="flex flex-col items-start">
-              <div className="text-sm font-bold tracking-tight">
-                Secular<span className="text-amber-400">AI</span>
+          {/* Close Button & Logo */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate("/home")}
+              className="hover:opacity-80 transition-opacity flex items-center gap-3 flex-1"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-300/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+                <Logo size={32} />
               </div>
-              <div className="text-[10px] text-amber-400/60 font-medium">Wisdom</div>
-            </div>
-          </button>
+              <div className="flex flex-col items-start">
+                <div className="text-sm font-bold tracking-tight">
+                  Secular<span className="text-amber-400">AI</span>
+                </div>
+                <div className="text-[10px] text-amber-400/60 font-medium">Wisdom</div>
+              </div>
+            </button>
+            <button onClick={() => setSidebarOpen(false)}
+              className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
           {/* New Chat Button */}
           {isAuthenticated && (
@@ -121,7 +128,7 @@ const HomePage = () => {
         <header className="border-b border-amber-500/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40 bg-[#0a0515]/95">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
+            className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
