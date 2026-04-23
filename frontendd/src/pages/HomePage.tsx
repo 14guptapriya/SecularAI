@@ -1,206 +1,265 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Share2, BookOpen, Sparkles } from "lucide-react";
+import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles } from "lucide-react";
 import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Logo } from "@/components/Logo";
 
 const HomePage = () => {
-  const [activeReligion, setActiveReligion] = useState(religions[0].id);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const isAuthenticated = !!localStorage.getItem("secularai-token");
+  const username = localStorage.getItem("secularai-username") || "User";
 
-  const activeRel = useMemo(() => religions.find((r) => r.id === activeReligion)!, [activeReligion]);
-  const colorVar = activeRel.colorVar;
+  const handleLogout = () => {
+    localStorage.removeItem("secularai-token");
+    localStorage.removeItem("secularai-username");
+    localStorage.removeItem("secularai-email");
+    navigate("/login");
+  };
+
+  const handleSelectReligion = (religionId: string) => {
+    const religion = religions.find((r) => r.id === religionId);
+    if (religion && religion.scriptures.length > 0) {
+      const firstAvailableScripture = religion.scriptures.find((s) => s.available);
+      if (firstAvailableScripture) {
+        navigate(`/chat/${firstAvailableScripture.id}`);
+      }
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-300">
-      {/* Header */}
-      <header className="sticky top-0 z-40 glass border-b border-border/50">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3 md:px-6">
+    <div className="min-h-screen bg-[#0a0515] flex">
+      {/* Sidebar */}
+      <aside
+        className={`fixed left-0 top-0 bottom-0 w-64 bg-[#1a1428] border-r border-amber-500/20 transition-transform duration-300 z-50 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="h-full flex flex-col p-4">
+          {/* Close Button & Logo */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate("/home")}
+              className="hover:opacity-80 transition-opacity flex items-center gap-3 flex-1"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-300/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+                <Logo size={32} />
+              </div>
+              <div className="flex flex-col items-start">
+                <div className="text-sm font-bold tracking-tight">
+                  Secular<span className="text-amber-400">AI</span>
+                </div>
+                <div className="text-[10px] text-amber-400/60 font-medium">Wisdom</div>
+              </div>
+            </button>
+            <button onClick={() => setSidebarOpen(false)}
+              className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* New Chat Button */}
+          {isAuthenticated && (
+            <button className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium transition-colors mb-4 border border-amber-500/40">
+              <Plus size={18} />
+              New Chat
+            </button>
+          )}
+
+          {/* Navigation */}
+          <nav className="space-y-2 flex-1">
+            <div className="text-xs font-semibold text-amber-400/60 uppercase tracking-wider px-2 py-4">
+              Menu
+            </div>
+            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
+              <MessageSquare size={16} />
+              <span className="text-sm">New Synthesis</span>
+            </button>
+            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
+              <History size={16} />
+              <span className="text-sm">Chat History</span>
+            </button>
+
+            <div className="border-t border-amber-500/20 my-4"></div>
+
+            <div className="text-xs font-semibold text-amber-400/60 uppercase tracking-wider px-2 py-4">
+              Faiths
+            </div>
+            {religions.map((religion) => {
+              const Icon = getFaithIcon(religion.id);
+              return (
+                <button
+                  key={religion.id}
+                  onClick={() => handleSelectReligion(religion.id)}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2 group"
+                >
+                  <Icon size={16} color={`hsl(var(${religion.colorVar}))`} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-sm">{religion.name}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Footer */}
+          <div className="border-t border-amber-500/20 pt-4 space-y-2">
+            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
+              <Settings size={16} />
+              <span className="text-sm">Settings</span>
+            </button>
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                <span className="text-sm">Logout</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Top Bar */}
+        <header className="border-b border-amber-500/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40 bg-[#0a0515]/95">
           <button
-            onClick={() => navigate("/")}
-            className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity duration-150 cursor-pointer"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
           >
-            Secular<span className="text-primary">AI</span>
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          {/* Search bar - hidden on mobile, shown md+ */}
-          <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search across all scriptures..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-full bg-secondary/60 border border-border/50 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-              />
-            </div>
+          <div className="flex-1 flex items-center justify-center md:justify-start md:ml-4">
+            <h1 className="text-xl font-semibold text-gray-100"></h1>
           </div>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            {localStorage.getItem("secularai-token") ? (
-              <button
-                onClick={() => navigate("/home")}
-                className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center"
-                title={localStorage.getItem("secularai-username") || "User"}
-              >
-                <span className="text-xs font-bold text-primary">
-                  {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
-                </span>
+            {isAuthenticated && (
+              <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
+                {username[0].toUpperCase()}
               </button>
-            ) : (
+            )}
+            {!isAuthenticated && (
               <>
                 <button
                   onClick={() => navigate("/login")}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-secondary/80 transition-colors"
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-100 hover:bg-amber-500/10 transition-colors"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => navigate("/register")}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-                  style={{ background: "hsl(var(--primary))" }}
+                  className="px-3 py-1.5 rounded-lg text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 transition-all"
                 >
                   Sign Up
                 </button>
               </>
             )}
           </div>
-        </div>
+        </header>
 
-        {/* Mobile search */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search across all scriptures..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-full bg-secondary/60 border border-border/50 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            />
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-        {/* Religion Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto py-5 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
-          {religions.map((r) => {
-            const Icon = getFaithIcon(r.id);
-            const isActive = r.id === activeReligion;
-            return (
-              <button
-                key={r.id}
-                onClick={() => setActiveReligion(r.id)}
-                className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300 ${isActive
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground/70"
-                  }`}
-              >
-                <Icon size={18} color={isActive ? `hsl(var(${r.colorVar}))` : "currentColor"} />
-                <span>{r.name}</span>
-                {isActive && (
-                  <div
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-all duration-500"
-                    style={{
-                      background: `hsl(var(${r.colorVar}))`,
-                      boxShadow: `0 0 12px hsl(var(${r.colorVar}) / 0.5)`,
-                    }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Scripture Grid */}
-        <section className="animate-fade-in" key={activeReligion}>
-          <h2 className="text-lg font-semibold mb-4">
-            {activeRel.name} Scriptures
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {activeRel.scriptures.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => s.available && navigate(`/chat/${s.id}`)}
-                disabled={!s.available}
-                className="group relative text-left rounded-2xl border border-border/60 bg-card p-5 transition-all duration-300 hover:opacity-80 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {/* Top icon area */}
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300"
-                  style={{
-                    background: `hsl(var(${colorVar}) / 0.1)`,
-                  }}
-                >
-                  {(() => {
-                    const Icon = getFaithIcon(activeReligion);
-                    return <Icon size={24} color={`hsl(var(${colorVar}))`} />;
-                  })()}
-                </div>
-
-                <h3 className="text-base font-semibold mb-1 text-card-foreground">{s.name}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{s.tagline}</p>
-
-                {s.chapters && (
-                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                    {s.chapters && <span>{s.chapters} chapters</span>}
-                    {s.verses && <span>• {s.verses.toLocaleString()} verses</span>}
-                  </div>
-                )}
-
-                {!s.available && (
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide uppercase glass border border-border/50 text-muted-foreground">
-                    Coming Soon
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Daily Wisdom */}
-        <section className="mt-12">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Daily Wisdom</h2>
-          </div>
-          <div
-            className="relative rounded-2xl border border-border/60 bg-card p-6 md:p-8 overflow-hidden shimmer"
-          >
-            <div className="relative z-10">
-              <p className="font-serif text-lg md:text-xl italic leading-relaxed text-card-foreground mb-4">
-                "{dailyWisdoms[activeReligion]?.verse || dailyWisdoms['buddhism'].verse}"
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto flex items-center justify-center p-4 md:p-8">
+          <div className="w-full max-w-4xl">
+            {/* Welcome Section */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">
+                What are you <span className="text-white">exploring today?</span>
+              </h1>
+              <p className="text-lg text-gray-300">
+                Dive into sacred texts across multiple faiths
               </p>
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ color: `hsl(var(${getReligionColor(dailyWisdoms[activeReligion]?.religionId || 'buddhism')}))` }}
-                  >
-                    {dailyWisdoms[activeReligion]?.reference || dailyWisdoms['buddhism'].reference}
-                  </span>
-                  <span className="text-sm text-muted-foreground ml-2">— {dailyWisdoms[activeReligion]?.religion || dailyWisdoms['buddhism'].religion}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary/80 text-secondary-foreground hover:bg-secondary transition-colors">
-                    <BookOpen className="h-3.5 w-3.5" />
-                    Read Context
-                  </button>
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary/80 text-secondary-foreground hover:bg-secondary transition-colors">
-                    <Share2 className="h-3.5 w-3.5" />
-                    Share
-                  </button>
+            </div>
+
+            {/* Search Bar */}
+            <div className="relative mb-12">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-amber-400/60" />
+              <input
+                type="text"
+                placeholder="Search across all scriptures, ask questions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-[#1a1428] border border-amber-500/30 text-base text-gray-100 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all"
+              />
+            </div>
+
+            {/* Quick Start Religious Tiles */}
+            <div className="mb-8">
+              <h2 className="text-sm font-semibold text-amber-400/70 uppercase tracking-wider mb-4">Start Exploring</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {religions.map((religion) => {
+                  const Icon = getFaithIcon(religion.id);
+                  const firstAvailable = religion.scriptures.find((s) => s.available);
+                  return (
+                    <button
+                      key={religion.id}
+                      onClick={() => handleSelectReligion(religion.id)}
+                      disabled={!firstAvailable}
+                      className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {/* Icon background */}
+                      <div
+                        className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110"
+                        style={{
+                          background: `hsl(var(${religion.colorVar}) / 0.15)`,
+                        }}
+                      >
+                        <Icon size={24} color={`hsl(var(${religion.colorVar}))`} />
+                      </div>
+
+                      <h3 className="text-base font-semibold mb-1 text-gray-100">{religion.name}</h3>
+                      <p className="text-xs text-gray-400 mb-3 line-clamp-2">
+                        {religion.description || `Explore ${religion.name} wisdom and teachings`}
+                      </p>
+
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <span>{religion.scriptures.filter((s) => s.available).length} texts</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Daily Wisdom */}
+            <div className="mt-16 pt-8 border-t border-amber-500/20">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-5 w-5 text-amber-400" />
+                <h2 className="text-sm font-semibold text-amber-400/70 uppercase tracking-wider">Daily Wisdom</h2>
+              </div>
+
+              <div className="relative rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] p-6 md:p-8">
+                <p className="font-serif text-lg md:text-xl italic leading-relaxed mb-6 text-gray-100">
+                  "{dailyWisdoms.buddhism?.verse || 'Conquer anger with non-anger. Conquer badness with goodness.'}"
+                </p>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ color: `hsl(var(${dailyWisdoms.buddhism?.colorVar || "--primary"}))` }}
+                    >
+                      {dailyWisdoms.buddhism?.reference || "Dhammapada 223"}
+                    </span>
+                    <span className="text-sm text-gray-500 ml-2">— {dailyWisdoms.buddhism?.religion || "Buddhism"}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        </main>
+      </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };
