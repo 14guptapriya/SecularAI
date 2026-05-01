@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles } from "lucide-react";
+import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles, Share2, BookOpen } from "lucide-react";
 import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
-import { Search, Share2, BookOpen, Sparkles, LogOut } from "lucide-react";
-import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
-import { getFaithIcon } from "@/components/FaithIcons";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   DropdownMenu,
@@ -39,11 +36,10 @@ const HomePage = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("secularai-token");
-    localStorage.removeItem("secularai-username");
-    navigate("/login");
-  };
+  const filteredReligions = religions.filter((religion) =>
+    religion.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    religion.scriptures.some((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
     <div className="min-h-screen bg-[#0a0515] flex">
@@ -154,28 +150,17 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {isAuthenticated && (
-              <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
-                {username[0].toUpperCase()}
-              </button>
-            )}
-            {!isAuthenticated && (
             <ThemeToggle />
-            {localStorage.getItem("secularai-token") ? (
+            {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors cursor-pointer"
-                    title={localStorage.getItem("secularai-username") || "User"}
-                  >
-                    <span className="text-xs font-bold text-primary">
-                      {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
-                    </span>
+                  <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
+                    {username[0].toUpperCase()}
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem disabled>
-                    <span className="text-sm">{localStorage.getItem("secularai-username")}</span>
+                    <span className="text-sm">{username}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -183,7 +168,8 @@ const HomePage = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
+            )}
+            {!isAuthenticated && (
               <>
                 <button
                   onClick={() => navigate("/login")}
@@ -230,39 +216,46 @@ const HomePage = () => {
             {/* Quick Start Religious Tiles */}
             <div className="mb-8">
               <h2 className="text-sm font-semibold text-amber-400/70 uppercase tracking-wider mb-4">Start Exploring</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {religions.map((religion) => {
-                  const Icon = getFaithIcon(religion.id);
-                  const firstAvailable = religion.scriptures.find((s) => s.available);
-                  return (
-                    <button
-                      key={religion.id}
-                      onClick={() => handleSelectReligion(religion.id)}
-                      disabled={!firstAvailable}
-                      className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {/* Icon background */}
-                      <div
-                        className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110"
-                        style={{
-                          background: `hsl(var(${religion.colorVar}) / 0.15)`,
-                        }}
+              {filteredReligions.length === 0 && searchQuery.trim() ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-400 text-lg">No scriptures found matching "{searchQuery}"</p>
+                  <p className="text-gray-500 text-sm mt-2">Try searching for a religion or scripture name</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredReligions.map((religion) => {
+                    const Icon = getFaithIcon(religion.id);
+                    const firstAvailable = religion.scriptures.find((s) => s.available);
+                    return (
+                      <button
+                        key={religion.id}
+                        onClick={() => handleSelectReligion(religion.id)}
+                        disabled={!firstAvailable}
+                        className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Icon size={24} color={`hsl(var(${religion.colorVar}))`} />
-                      </div>
+                        {/* Icon background */}
+                        <div
+                          className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110"
+                          style={{
+                            background: `hsl(var(${religion.colorVar}) / 0.15)`,
+                          }}
+                        >
+                          <Icon size={24} color={`hsl(var(${religion.colorVar}))`} />
+                        </div>
 
-                      <h3 className="text-base font-semibold mb-1 text-gray-100">{religion.name}</h3>
-                      <p className="text-xs text-gray-400 mb-3 line-clamp-2">
-                        {religion.description || `Explore ${religion.name} wisdom and teachings`}
-                      </p>
+                        <h3 className="text-base font-semibold mb-1 text-gray-100">{religion.name}</h3>
+                        <p className="text-xs text-gray-400 mb-3 line-clamp-2">
+                          {religion.description || `Explore ${religion.name} wisdom and teachings`}
+                        </p>
 
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span>{religion.scriptures.filter((s) => s.available).length} texts</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span>{religion.scriptures.filter((s) => s.available).length} texts</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Daily Wisdom */}
