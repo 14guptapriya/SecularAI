@@ -4,7 +4,7 @@
 
 ### 🪷 *Ancient wisdom, modern tech. Chat with the Bhagavad Gita.*
 
-**[🚀 Try it live → gitarag.vercel.app](https://secular-ai.vercel.app)**
+**[🚀 Try it live → secular-ai.vercel.app](https://secular-ai.vercel.app)**
 
 </div>
 
@@ -36,7 +36,7 @@ No hallucinations. No generic wisdom. Just grounded answers from the actual text
     
     ↓
     
-   🤖 GitARAG
+   🤖 SecularAi
    
    ↓
    
