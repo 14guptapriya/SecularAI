@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Search, Send, Copy, Bookmark, Volume2, Square, Menu, Plus, MessageSquare, X, Trash2, SendHorizontalIcon } from "lucide-react";
+import { ArrowLeft, Send, Copy, Bookmark, Volume2, Square, Menu, Plus, MessageSquare, X, Trash2, SendHorizontalIcon, LogOut } from "lucide-react";
 import { getScripture, getReligionByScriptureId, type ChatMessage } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -15,6 +16,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   PromptInput,
   PromptInputBody,
@@ -270,6 +277,12 @@ const ChatPage = () => {
     setInput(text);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("secularai-token");
+    localStorage.removeItem("secularai-username");
+    navigate("/login");
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0515] flex overflow-hidden">
 
@@ -395,6 +408,30 @@ const ChatPage = () => {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-100 truncate">{localStorage.getItem("secularai-username") || "User"}</p>
               </div>
+          <div className="p-4 border-t border-border/50">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full flex items-center gap-3 px-1 hover:bg-secondary/40 rounded-lg py-2 transition-colors cursor-pointer">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                    {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-sm font-medium text-foreground truncate">{localStorage.getItem("secularai-username") || "User"}</p>
+                  </div>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuItem disabled>
+                  <span className="text-xs text-muted-foreground">{localStorage.getItem("secularai-username") || "User"}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="mt-2 flex justify-center">
+              <ThemeToggle />
             </div>
           </div>
         </div>

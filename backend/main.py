@@ -23,7 +23,7 @@ allowed_origins = [
     "http://localhost:5173", 
     "http://localhost:5174",
     "https://secular-ai-backend.vercel.app",
-    "https://secular-ai.vercel.app",
+    "https://secularai.vercel.app",
     frontend_url,
     
 ]
@@ -57,7 +57,7 @@ class QueryRequest(BaseModel):
     user_query: str
     religion: str = "hinduism"
     scripture: str = "gita"
-    session_id: str
+    session_id: Optional[str] = None
 
 @app.get("/db-test")
 def db_test(db: Session = Depends(get_db)):
@@ -72,28 +72,29 @@ def query_scripture(request: QueryRequest, db: Session = Depends(get_db)):
     from models import ChatMessage, ChatSession
     import json
 
-    session = db.query(ChatSession).filter(ChatSession.id == request.session_id).first()
-    if not session:
-        return {"error": "Session not found"}
-
-    past_messages = (
-        db.query(ChatMessage)
-        .filter(ChatMessage.session_id == request.session_id)
-        .order_by(ChatMessage.created_at)
-        .all()
-    )
-
     history_text = ""
-    for msg in past_messages[-14:]:  # Only use last 14 messages for context
-        role = "User" if msg.role == "user" else "Guide"
-        history_text += f"{role}: {msg.content}\n"
+    if request.session_id:
+        session = db.query(ChatSession).filter(ChatSession.id == request.session_id).first()
+        if not session:
+            return {"error": "Session not found"}
 
-    # Save user message
-    user_msg = ChatMessage(
-        session_id=request.session_id, role="user", content=request.user_query
-    )
-    db.add(user_msg)
-    db.commit()
+        past_messages = (
+            db.query(ChatMessage)
+            .filter(ChatMessage.session_id == request.session_id)
+            .order_by(ChatMessage.created_at)
+            .all()
+        )
+
+        for msg in past_messages[-14:]:  # Only use last 14 messages for context
+            role = "User" if msg.role == "user" else "Guide"
+            history_text += f"{role}: {msg.content}\n"
+
+        # Save user message
+        user_msg = ChatMessage(
+            session_id=request.session_id, role="user", content=request.user_query
+        )
+        db.add(user_msg)
+        db.commit()
 
     # Get reply
     from query import get_ai_reply
@@ -120,14 +121,15 @@ def query_scripture(request: QueryRequest, db: Session = Depends(get_db)):
         r'\[VERSE title="(.+?)"\]([\s\S]*?)\[\/VERSE\]', extract_verses, reply
     ).strip()
 
-    # Save AI message
-    ai_msg = ChatMessage(
-        session_id=request.session_id,
-        role="ai",
-        content=reply,
-        verses_json=json.dumps(verses_data) if verses_data else None,
-    )
-    db.add(ai_msg)
-    db.commit()
+    if request.session_id:
+        # Save AI message
+        ai_msg = ChatMessage(
+            session_id=request.session_id,
+            role="ai",
+            content=reply,
+            verses_json=json.dumps(verses_data) if verses_data else None,
+        )
+        db.add(ai_msg)
+        db.commit()
 
     return {"answer": reply}
