@@ -616,8 +616,8 @@ const ChatPage = () => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-    </div>
-  );
+     </div>
+    );
 };
 
 export default ChatPage;
