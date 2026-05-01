@@ -150,28 +150,17 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {isAuthenticated && (
-              <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
-                {username[0].toUpperCase()}
-              </button>
-            )}
-            {!isAuthenticated && (
             <ThemeToggle />
-            {localStorage.getItem("secularai-token") ? (
+            {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors cursor-pointer"
-                    title={localStorage.getItem("secularai-username") || "User"}
-                  >
-                    <span className="text-xs font-bold text-primary">
-                      {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
-                    </span>
+                  <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
+                    {username[0].toUpperCase()}
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem disabled>
-                    <span className="text-sm">{localStorage.getItem("secularai-username")}</span>
+                    <span className="text-sm">{username}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -179,7 +168,8 @@ const HomePage = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
+            )}
+            {!isAuthenticated && (
               <>
                 <button
                   onClick={() => navigate("/login")}

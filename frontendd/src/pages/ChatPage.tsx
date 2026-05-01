@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Send, Copy, Bookmark, Volume2, Square, Menu, Plus, MessageSquare, X, Trash2, SendHorizontalIcon } from "lucide-react";
-import { ArrowLeft, Send, Copy, Bookmark, Volume2, Square, Menu, Plus, MessageSquare, X, Trash2, SendHorizontalIcon, LogOut } from "lucide-react";
+import { ArrowLeft, Search, Send, Copy, Bookmark, Volume2, Square, Menu, Plus, MessageSquare, X, Trash2, SendHorizontalIcon, LogOut } from "lucide-react";
 import { getScripture, getReligionByScriptureId, type ChatMessage } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -72,7 +71,7 @@ const ChatPage = () => {
   // Dashboard state
   const [sessions, setSessions] = useState<Session[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Open by default on large screens
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [sidebarSearch, setSidebarSearch] = useState("");
   const [showOnlyCurrent, setShowOnlyCurrent] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
@@ -85,7 +84,6 @@ const ChatPage = () => {
   const colorVar = religion?.colorVar || "--primary";
   const Icon = religion ? getFaithIcon(religion.id) : getFaithIcon("hinduism");
 
-  // Fetch token
   const token = localStorage.getItem("secularai-token");
 
   useEffect(() => {
@@ -268,7 +266,6 @@ const ChatPage = () => {
       }
     } finally {
       setIsLoading(false);
-      // Refresh sidebar titles if it was a new chat
       if (!currentSessionId) fetchSessions();
     }
   };
@@ -294,9 +291,11 @@ const ChatPage = () => {
         />
       )}
 
-      {/* Sidebar (Desktop & Mobile drawer) */}
+      {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-[300px] bg-[#1a1428] border-r border-amber-500/20 transform transition-all duration-300 ease-in-out xl:relative xl:w-72 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full xl:-ml-72"}`}>
         <div className="h-full flex flex-col pt-4">
+
+          {/* Sidebar Header */}
           <div className="px-4 pb-3 border-b border-amber-500/20 space-y-3">
             <div className="flex items-center justify-between gap-2">
               <button onClick={() => navigate("/home")} className="p-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-400 hover:text-gray-100">
@@ -320,7 +319,7 @@ const ChatPage = () => {
                 {sidebarSearch && (
                   <button
                     onClick={() => setSidebarSearch("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-amber-500/10 text-gray-400"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-amber-500/10 text-gray-400"
                     aria-label="Clear search"
                   >
                     ✕
@@ -355,6 +354,7 @@ const ChatPage = () => {
             </div>
           </div>
 
+          {/* Sessions List */}
           <div className="flex-1 overflow-y-auto px-2 py-4 space-y-2 custom-scrollbar">
             {filteredSessions.length === 0 ? (
               <p className="px-3 text-xs text-gray-400/60 italic">No matching history.</p>
@@ -399,24 +399,16 @@ const ChatPage = () => {
             )}
           </div>
 
-          {/* User Profile Area */}
+          {/* ✅ FIXED: Single clean user profile area */}
           <div className="p-4 border-t border-amber-500/20">
-            <div className="flex items-center gap-3 px-1">
-              <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
-                {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-100 truncate">{localStorage.getItem("secularai-username") || "User"}</p>
-              </div>
-          <div className="p-4 border-t border-border/50">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-full flex items-center gap-3 px-1 hover:bg-secondary/40 rounded-lg py-2 transition-colors cursor-pointer">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                <button className="w-full flex items-center gap-3 px-1 hover:bg-amber-500/10 rounded-lg py-2 transition-colors cursor-pointer">
+                  <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
                     {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0 text-left">
-                    <p className="text-sm font-medium text-foreground truncate">{localStorage.getItem("secularai-username") || "User"}</p>
+                    <p className="text-sm font-medium text-gray-100 truncate">{localStorage.getItem("secularai-username") || "User"}</p>
                   </div>
                 </button>
               </DropdownMenuTrigger>
@@ -434,6 +426,7 @@ const ChatPage = () => {
               <ThemeToggle />
             </div>
           </div>
+
         </div>
       </div>
 
@@ -465,7 +458,6 @@ const ChatPage = () => {
         <div className="flex-1 overflow-y-auto w-full relative bg-[#0a0515]">
           <div className="max-w-3xl mx-auto px-4 py-8">
             {messages.length === 0 && !isLoading ? (
-              /* Welcome state */
               <div className="flex flex-col items-center text-center pt-[10vh] animate-fade-in-up">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style={{ background: `hsl(var(${colorVar}) / 0.15)` }}>
                   <Icon size={32} color={`hsl(var(${colorVar}))`} />
@@ -486,7 +478,6 @@ const ChatPage = () => {
                 </div>
               </div>
             ) : (
-              /* Messages */
               <div className="space-y-6">
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}>
@@ -496,7 +487,6 @@ const ChatPage = () => {
                       </div>
                     ) : (
                       <div className="w-full max-w-[95%] space-y-3">
-                        {/* AI label */}
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-7 h-7 rounded-full bg-amber-500/30 flex items-center justify-center border border-amber-500/50">
                             <span className="text-[11px] font-bold text-amber-400">S</span>
@@ -516,11 +506,9 @@ const ChatPage = () => {
                           )}
                         </div>
 
-                        {/* Message content - No left border as requested */}
                         <div className="pl-9 format-markdown">
                           <p className="text-[15px] leading-relaxed text-gray-100 whitespace-pre-wrap">{msg.content}</p>
 
-                          {/* Verse tiles */}
                           {msg.verses?.map((v, i) => (
                             <div
                               key={i}
@@ -556,7 +544,6 @@ const ChatPage = () => {
                   </div>
                 ))}
 
-                {/* Better Loading Shimmer */}
                 {isLoading && (
                   <div className="flex justify-start animate-fade-in w-full">
                     <div className="w-full max-w-[95%] space-y-3">
@@ -566,7 +553,6 @@ const ChatPage = () => {
                         </div>
                         <span className="text-sm font-semibold text-gray-100">SecularAI</span>
                       </div>
-
                       <div className="pl-9 w-full">
                         <div className="space-y-3 w-full max-w-2xl">
                           <div className="h-4 bg-amber-500/20 rounded-md w-full animate-pulse"></div>
@@ -645,16 +631,8 @@ const ChatPage = () => {
         </div>
 
       </div>
-
-      {/* Mobile overlay */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden animate-fade-in"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-     </div>
-    );
+    </div>
+  );
 };
 
 export default ChatPage;
