@@ -4,6 +4,16 @@ import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkl
 import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
+import { Search, Share2, BookOpen, Sparkles, LogOut } from "lucide-react";
+import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
+import { getFaithIcon } from "@/components/FaithIcons";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const HomePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,6 +37,12 @@ const HomePage = () => {
         navigate(`/chat/${firstAvailableScripture.id}`);
       }
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("secularai-token");
+    localStorage.removeItem("secularai-username");
+    navigate("/login");
   };
 
   return (
@@ -144,6 +160,30 @@ const HomePage = () => {
               </button>
             )}
             {!isAuthenticated && (
+            <ThemeToggle />
+            {localStorage.getItem("secularai-token") ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors cursor-pointer"
+                    title={localStorage.getItem("secularai-username") || "User"}
+                  >
+                    <span className="text-xs font-bold text-primary">
+                      {(localStorage.getItem("secularai-username") || "U")[0].toUpperCase()}
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled>
+                    <span className="text-sm">{localStorage.getItem("secularai-username")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
               <>
                 <button
                   onClick={() => navigate("/login")}
