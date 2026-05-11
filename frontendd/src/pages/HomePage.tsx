@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles, Share2, BookOpen } from "lucide-react";
-import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
+import { Search, Plus, MessageSquare, History, Settings, LogOut, Sparkles, Share2, BookOpen, Columns2 } from "lucide-react";
+import { religions, dailyWisdoms } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -69,7 +69,7 @@ const HomePage = () => {
             <button onClick={() => setSidebarOpen(false)}
               className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
             >
-              <X size={20} />
+              <Columns2 size={20} />
             </button>
           </div>
 
@@ -141,8 +141,11 @@ const HomePage = () => {
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
+            aria-label="Toggle sidebar"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+              <Logo size={20} />
+            </div>
           </button>
 
           <div className="flex-1 flex items-center justify-center md:justify-start md:ml-4">
