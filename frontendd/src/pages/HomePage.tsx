@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, Sidebar, Sparkles } from "lucide-react";
-=======
-import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles, Share2, BookOpen } from "lucide-react";
->>>>>>> 91ee9e51c95b75142eea3fc4fc0ebd3d57de0b89
-import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
+import { religions, dailyWisdoms } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -40,14 +36,11 @@ const HomePage = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   const filteredReligions = religions.filter((religion) =>
     religion.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     religion.scriptures.some((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
->>>>>>> 91ee9e51c95b75142eea3fc4fc0ebd3d57de0b89
   return (
     <div className="min-h-screen bg-[#0a0515] flex">
       {/* Sidebar */}
@@ -224,24 +217,6 @@ const HomePage = () => {
             {/* Quick Start Religious Tiles */}
             <div className="mb-8">
               <h2 className="text-sm font-semibold text-amber-400/70 uppercase tracking-wider mb-4">Start Exploring</h2>
-<<<<<<< HEAD
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {religions.map((religion) => {
-                  const Icon = getFaithIcon(religion.id);
-                  const firstAvailable = religion.scriptures.find((s) => s.available);
-                  return (
-                    <button
-                      key={religion.id}
-                      onClick={() => handleSelectReligion(religion.id)}
-                      disabled={!firstAvailable}
-                      className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <div
-                        className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110"
-                        style={{
-                          background: `hsl(var(${religion.colorVar}) / 0.15)`,
-                        }}
-=======
               {filteredReligions.length === 0 && searchQuery.trim() ? (
                 <div className="text-center py-12">
                   <p className="text-gray-400 text-lg">No scriptures found matching "{searchQuery}"</p>
@@ -258,7 +233,7 @@ const HomePage = () => {
                         onClick={() => handleSelectReligion(religion.id)}
                         disabled={!firstAvailable}
                         className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
->>>>>>> 91ee9e51c95b75142eea3fc4fc0ebd3d57de0b89
+
                       >
                         {/* Icon background */}
                         <div
