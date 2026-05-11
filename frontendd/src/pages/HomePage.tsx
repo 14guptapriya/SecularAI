@@ -73,7 +73,6 @@ const HomePage = () => {
             </button>
           </div>
 
-          New Chat Button
           {/* {isAuthenticated && (
             <button className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium transition-colors mb-4 border border-amber-500/40">
               <Plus size={18} />
