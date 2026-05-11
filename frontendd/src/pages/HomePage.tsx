@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles } from "lucide-react";
+import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, Sidebar, Sparkles } from "lucide-react";
 import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
-import { Search, Share2, BookOpen, Sparkles, LogOut } from "lucide-react";
-import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
-import { getFaithIcon } from "@/components/FaithIcons";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   DropdownMenu,
@@ -39,12 +36,6 @@ const HomePage = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("secularai-token");
-    localStorage.removeItem("secularai-username");
-    navigate("/login");
-  };
-
   return (
     <div className="min-h-screen bg-[#0a0515] flex">
       {/* Sidebar */}
@@ -73,17 +64,17 @@ const HomePage = () => {
             <button onClick={() => setSidebarOpen(false)}
               className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
             >
-              <X size={20} />
+              <Sidebar size={20} />
             </button>
           </div>
 
           {/* New Chat Button */}
-          {isAuthenticated && (
+          {/* {isAuthenticated && (
             <button className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium transition-colors mb-4 border border-amber-500/40">
               <Plus size={18} />
               New Chat
             </button>
-          )}
+          )} */}
 
           {/* Navigation */}
           <nav className="space-y-2 flex-1">
@@ -146,20 +137,15 @@ const HomePage = () => {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {sidebarOpen ? <Sidebar size={20} /> : <Menu size={20} />}
           </button>
 
           <div className="flex-1 flex items-center justify-center md:justify-start md:ml-4">
             <h1 className="text-xl font-semibold text-gray-100"></h1>
           </div>
 
+          {/* ✅ FIXED: Clean header right section */}
           <div className="flex items-center gap-2">
-            {isAuthenticated && (
-              <button className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-400 hover:bg-amber-500/30 transition-colors">
-                {username[0].toUpperCase()}
-              </button>
-            )}
-            {!isAuthenticated && (
             <ThemeToggle />
             {localStorage.getItem("secularai-token") ? (
               <DropdownMenu>
@@ -241,7 +227,6 @@ const HomePage = () => {
                       disabled={!firstAvailable}
                       className="group relative text-left rounded-2xl border border-amber-500/20 bg-gradient-to-br from-[#1a1428] to-[#0f0620] hover:bg-[#1a1428]/80 hover:border-amber-500/40 p-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {/* Icon background */}
                       <div
                         className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110"
                         style={{

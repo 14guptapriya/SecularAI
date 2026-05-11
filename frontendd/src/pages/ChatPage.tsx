@@ -569,7 +569,7 @@ const ChatPage = () => {
               </div>
             )}
           </div>
-        </div>
+        </div>  
 
         {/* Floating input */}
         <div className="shrink-0 p-4 pb-6 bg-[#0a0515]">
