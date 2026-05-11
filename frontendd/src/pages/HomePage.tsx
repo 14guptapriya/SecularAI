@@ -4,7 +4,6 @@ import { Search, Plus, MessageSquare, History, Settings, LogOut, Sparkles, Share
 import { religions, dailyWisdoms } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -152,7 +151,6 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
