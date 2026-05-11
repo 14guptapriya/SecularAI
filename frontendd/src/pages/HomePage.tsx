@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, Sidebar, Sparkles } from "lucide-react";
-import { religions, dailyWisdoms } from "@/data/mockData";
+import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles, Share2, BookOpen } from "lucide-react";
+import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
 import { Logo } from "@/components/Logo";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,15 +65,21 @@ const HomePage = () => {
                 <div className="text-[10px] text-amber-400/60 font-medium">Wisdom</div>
               </div>
             </button>
-            <button onClick={() => setSidebarOpen(false)}
+            <button
+              onClick={() => setSidebarOpen(false)}
               className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
+              aria-label="Close sidebar"
             >
-              <Sidebar size={20} />
+              <div className="w-9 h-6 rounded-2xl border border-slate-400/40 bg-[#0e0814] flex items-center justify-center">
+                <div className="relative w-6.5 h-3.5 rounded-[10px] border border-slate-500/50 bg-[#0b0710] shadow-inner">
+                  <div className="absolute inset-y-0 left-1/2 w-[1.5px] bg-slate-300/70 rounded-full" />
+                </div>
+              </div>
             </button>
           </div>
 
-          {/* New Chat Button */}
-          {/* {isAuthenticated && (
+          {/* New Chat Button
+          {isAuthenticated && (
             <button className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium transition-colors mb-4 border border-amber-500/40">
               <Plus size={18} />
               New Chat
@@ -141,8 +146,9 @@ const HomePage = () => {
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors"
+            aria-label="Toggle sidebar"
           >
-            {sidebarOpen ? <Sidebar size={20} /> : <Menu size={20} />}
+            <Logo size={24} />
           </button>
 
           <div className="flex-1 flex items-center justify-center md:justify-start md:ml-4">
@@ -151,7 +157,6 @@ const HomePage = () => {
 
           {/* ✅ FIXED: Clean header right section */}
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
