@@ -44,9 +44,8 @@ const HomePage = () => {
     <div className="min-h-screen bg-[#0a0515] flex">
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 bottom-0 w-64 bg-[#1a1428] border-r border-amber-500/20 transition-transform duration-300 z-50 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed left-0 top-0 bottom-0 w-64 bg-[#1a1428] border-r border-amber-500/20 transition-transform duration-300 z-50 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="h-full flex flex-col p-4">
           {/* Close Button & Logo */}
@@ -70,11 +69,19 @@ const HomePage = () => {
               className="p-2 hover:bg-amber-500/10 rounded-lg transition-colors flex-shrink-0"
               aria-label="Close sidebar"
             >
-              <div className="w-9 h-6 rounded-2xl border border-slate-400/40 bg-[#0e0814] flex items-center justify-center">
-                <div className="relative w-6.5 h-3.5 rounded-[10px] border border-slate-500/50 bg-[#0b0710] shadow-inner">
-                  <div className="absolute inset-y-0 left-1/2 w-[1.5px] bg-slate-300/70 rounded-full" />
-                </div>
-              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+              </svg>
             </button>
           </div>
 
