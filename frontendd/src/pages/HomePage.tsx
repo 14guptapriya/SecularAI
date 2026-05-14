@@ -58,7 +58,7 @@ const HomePage = () => {
                 <Logo size={32} />
               </div>
               <div className="flex flex-col items-start">
-                <div className="text-sm font-bold tracking-tight">
+                <div className="text-sm font-bold tracking-tight text-white">
                   Secular<span className="text-amber-400">AI</span>
                 </div>
                 <div className="text-[10px] text-amber-400/60 font-medium">Wisdom</div>
@@ -74,7 +74,7 @@ const HomePage = () => {
                 height="20"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke="white"
                 strokeWidth="1.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
