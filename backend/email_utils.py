@@ -10,12 +10,13 @@ load_dotenv()
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = os.getenv("SMTP_USER", "bhandarisanketp@gmail.com")
+SMTP_USER = os.getenv("SMTP_USER", "noreplytosecularai@gmail.com")
 SMTP_PASS = os.getenv("SMTP_PASS", "")
 
 
 def generate_otp() -> str:
     return "".join(random.choices(string.digits, k=6))
+
 
 def send_otp_email(to_email: str, otp_code: str):
     subject = "Your SecularAI Verification Code"
