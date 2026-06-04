@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, Plus, MessageSquare, History, Settings, LogOut, Menu, X, Sparkles, Share2, BookOpen } from "lucide-react";
 import { religions, dailyWisdoms, getReligionColor } from "@/data/mockData";
 import { getFaithIcon } from "@/components/FaithIcons";
+
 import { Logo } from "@/components/Logo";
 import {
   DropdownMenu,
