@@ -21,18 +21,41 @@ def generate_otp() -> str:
 def send_otp_email(to_email: str, otp_code: str):
     subject = "Your SecularAI Verification Code"
     html_body = f"""
-     <div style="font-family: Inter, Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0d1016; color: #e2e8f0; border-radius: 16px;">
-        <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">
-          Secular<span style="color: #38bdf8;">AI</span>
-        </h1>
-        <p style="color: #64748b; margin-bottom: 24px;">Explore the wisdom of all traditions</p>
-        <hr style="border-color: #1e293b; margin-bottom: 24px;" />
-        <p style="margin-bottom: 8px; color: #94a3b8;">Your verification code is:</p>
-        <div style="font-size: 40px; font-weight: 800; letter-spacing: 12px; color: #38bdf8; margin: 16px 0 24px; text-align: center; background: #0f172a; border-radius: 12px; padding: 16px;">
-          {otp_code}
-        </div>
-        <p style="font-size: 13px; color: #64748b;">This code expires in 3 minutes. If you didn't request this, please ignore this email.</p>
+    <div style="font-family: Georgia, serif; max-width: 460px; margin: 0 auto;
+         padding: 32px; background: #1a0d3a; color: #d4c4f0;
+         border-radius: 20px; border: 1px solid rgba(180,130,255,0.18);">
+
+      <h1 style="font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: 0.04em; color: #f5e6b8;">
+        Secular<span style="color: #c07020;">AI</span>
+      </h1>
+
+      <p style="color: rgba(200,170,255,0.5); margin: 0 0 24px;
+         font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;">
+        A universe of spiritual wisdom
+      </p>
+
+      <hr style="border: none; border-top: 1px solid rgba(180,130,255,0.12); margin-bottom: 24px;" />
+
+      <p style="margin: 0 0 12px; color: rgba(200,170,255,0.5);
+         font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;">
+        Your verification code
+      </p>
+
+      <div style="font-size: 38px; font-weight: 600; letter-spacing: 14px;
+           color: #f5c842; margin: 0 0 24px; text-align: center;
+           background: rgba(255,255,255,0.03);
+           border: 1px solid rgba(180,130,255,0.2);
+           border-radius: 14px; padding: 20px 16px;">
+        {otp_code}
       </div>
+
+      <p style="font-size: 12px; color: rgba(200,170,255,0.35); line-height: 1.7; margin: 0;">
+        This code expires in
+        <strong style="color: rgba(245,200,66,0.7);">3 minutes</strong>.
+        If you didn't request this, please ignore this email.
+      </p>
+
+    </div>
     """
 
     msg = MIMEMultipart("alternative")
