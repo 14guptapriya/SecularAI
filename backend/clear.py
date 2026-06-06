@@ -15,4 +15,4 @@ index = pc.Index(index_name)
 
 index.delete(delete_all=True)
 
-print("All vectors deleted successfully!")
+print(" All vectors deleted successfully!")

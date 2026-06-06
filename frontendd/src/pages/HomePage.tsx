@@ -99,14 +99,17 @@ const HomePage = () => {
             <div className="text-xs font-semibold text-amber-400/60 uppercase tracking-wider px-2 py-4">
               Menu
             </div>
-            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
+            <button 
+              onClick={() => navigate("/synthesis")}
+              className="w-full text-left px-3 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2"
+            >
               <MessageSquare size={16} />
               <span className="text-sm">New Synthesis</span>
             </button>
-            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
+            {/* <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors text-gray-100 flex items-center gap-2">
               <History size={16} />
               <span className="text-sm">Chat History</span>
-            </button>
+            </button> */}
 
             <div className="border-t border-amber-500/20 my-4"></div>
 
