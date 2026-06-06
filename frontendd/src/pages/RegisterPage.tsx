@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
@@ -112,10 +111,6 @@ const RegisterPage = () => {
                 title="Close sidebar"
                 className="absolute inset-y-0 left-0 z-20 w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] after:rounded-full after:bg-amber-300/30 hover:after:bg-amber-300/80 bg-transparent"
             />
-            <div className="absolute top-4 right-4 z-10">
-                <ThemeToggle />
-            </div>
-
             <div className="w-full max-w-sm relative z-10">
                 <div className="text-center mb-8">
                     <button onClick={() => navigate("/")} className="text-3xl font-bold tracking-tight text-slate-100 hover:opacity-90 transition-opacity">
